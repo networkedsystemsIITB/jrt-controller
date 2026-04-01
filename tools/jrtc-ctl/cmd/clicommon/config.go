@@ -33,16 +33,18 @@ type Decoder struct {
 	HTTPRelativePath string `json:"http_relative_path,omitempty" jsonschema:"default=,omitempty"`
 	IP               string `json:"-"`
 	OptionalIP       net.IP `json:"ip,omitempty" jsonschema:"default=127.0.0.1"`
+	OptionalHost     string `json:"host,omitempty" jsonschema:"default=localhost"`
 	Port             uint16 `json:"port" jsonschema:"required,minimum=0,maximum=65535"`
 	Typ              string `json:"type" jsonschema:"default=decodergrpc,enum=decodergrpc,enum=decoderhttp"`
 }
 
 // JBPFDevice is an agent that can run JBPF Codelets
 type JBPFDevice struct {
-	ID         uint8  `json:"id" jsonschema:"required,minimum=0,maximum=127"`
-	IP         string `json:"-"`
-	OptionalIP net.IP `json:"ip,omitempty" jsonschema:"default=127.0.0.1"`
-	Port       uint16 `json:"port" jsonschema:"required,minimum=0,maximum=65535"`
+	ID           uint8  `json:"id" jsonschema:"required,minimum=0,maximum=127"`
+	IP           string `json:"-"`
+	OptionalIP   net.IP `json:"ip,omitempty" jsonschema:"default=127.0.0.1"`
+	OptionalHost string `json:"host,omitempty" jsonschema:"default=localhost"`
+	Port         uint16 `json:"port" jsonschema:"required,minimum=0,maximum=65535"`
 }
 
 // App represents an application
@@ -54,6 +56,7 @@ type App struct {
 	OptionalDeadline  *string       `json:"deadline,omitempty" jsonschema:"default=0s"`
 	OptionalIOQSize   *int32        `json:"ioq_size,omitempty" jsonschema:"default=1000"`
 	OptionalIP        net.IP        `json:"ip,omitempty" jsonschema:"default=127.0.0.1"`
+	OptionalHost      string        `json:"host,omitempty" jsonschema:"default=localhost"`
 	OptionalPeriod    *string       `json:"period,omitempty" jsonschema:"default=0s"`
 	OptionalRuntime   *string       `json:"runtime,omitempty" jsonschema:"default=0s"`
 	Period            time.Duration `json:"-"`
@@ -231,6 +234,8 @@ func (c *CLIConfig) setDefaults() (err error) {
 		app.IP = defaultAppIP
 		if app.OptionalIP != nil && app.OptionalIP.String() != "" {
 			app.IP = app.OptionalIP.String()
+		} else if app.OptionalHost != "" {
+			app.IP = app.OptionalHost
 		}
 		if app.OptionalIOQSize == nil {
 			app.IOQSize = defaultAppIOQSize
@@ -243,6 +248,8 @@ func (c *CLIConfig) setDefaults() (err error) {
 		dec.IP = defaultDecoderIP
 		if dec.OptionalIP != nil && dec.OptionalIP.String() != "" {
 			dec.IP = dec.OptionalIP.String()
+		} else if dec.OptionalHost != "" {
+			dec.IP = dec.OptionalHost
 		}
 	}
 
@@ -250,6 +257,8 @@ func (c *CLIConfig) setDefaults() (err error) {
 		dev.IP = defaultDeviceIP
 		if dev.OptionalIP != nil && dev.OptionalIP.String() != "" {
 			dev.IP = dev.OptionalIP.String()
+		} else if dev.OptionalHost != "" {
+			dev.IP = dev.OptionalHost
 		}
 	}
 
