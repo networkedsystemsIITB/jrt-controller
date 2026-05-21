@@ -195,10 +195,8 @@ else()
   message(STATUS "Not in Debug mode, coverage not enabled")
 endif()
 
-# Add the tests directory
-add_subdirectory(jrtc_tests)
-
 if(CMAKE_BUILD_TYPE MATCHES Debug)
+  add_subdirectory(jrtc_tests)
   message(STATUS "JRTC_TESTS = ${JRTC_TESTS}")
 
   set(GCOVR_EXCLUDES
